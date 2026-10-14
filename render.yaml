@@ -1,0 +1,40 @@
+# Render Blueprint: one web service plus a Postgres database.
+services:
+  - type: web
+    name: livealone-ai
+    runtime: node
+    plan: free
+    buildCommand: node unpack.mjs && npm install
+    startCommand: npm start
+    healthCheckPath: /healthz
+    envVars:
+      - key: NODE_VERSION
+        value: 20
+      - key: DATABASE_URL
+        fromDatabase:
+          name: livealone-db
+          property: connectionString
+      - key: ANTHROPIC_API_KEY
+        sync: false
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: AI_PROVIDER
+        sync: false
+      - key: ALLOW_SENSITIVE_ON_FREE
+        sync: false
+      - key: CLERK_PUBLISHABLE_KEY
+        sync: false
+      - key: CLERK_SECRET_KEY
+        sync: false
+      - key: TMDB_API_KEY
+        sync: false
+      - key: PEXELS_API_KEY
+        sync: false
+      - key: CONTACT_EMAIL
+        sync: false
+
+databases:
+  - name: livealone-db
+    plan: free
+    databaseName: livealone
+    user: livealone
