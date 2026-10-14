@@ -1,7 +1,9 @@
-# Render Blueprint: one web service plus a Postgres database.
+# Render Blueprint for a COPY of LiveAlone AI: one web service, no new database.
+# Render's free plan allows only one free database, so this copy asks you for DATABASE_URL instead.
+# Paste either a free Neon/Supabase Postgres URL (separate data) or your existing database's URL (shared data).
 services:
   - type: web
-    name: livealone-ai
+    name: livealone-ai-2
     runtime: node
     plan: free
     buildCommand: node unpack.mjs && npm install
@@ -11,9 +13,7 @@ services:
       - key: NODE_VERSION
         value: 20
       - key: DATABASE_URL
-        fromDatabase:
-          name: livealone-db
-          property: connectionString
+        sync: false
       - key: ANTHROPIC_API_KEY
         sync: false
       - key: GEMINI_API_KEY
@@ -32,9 +32,3 @@ services:
         sync: false
       - key: CONTACT_EMAIL
         sync: false
-
-databases:
-  - name: livealone-db
-    plan: free
-    databaseName: livealone
-    user: livealone
